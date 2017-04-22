@@ -1,0 +1,15 @@
+transporter.host = localhost
+transporter.port = 3456
+
+transporter.login = admv4
+transporter.password = 123456
+
+client.login = user11
+client.password = 0000
+
+admin.login = sys_admin
+admin.password = ${cfgman.password}
+
+manager.login = sys_man
+
+mapping = ${transporter.login} ${transporter.password}, ${client.login} ${client.password}, ${admin.login} ${admin.password}, ${manager.login} ${manager.password}
