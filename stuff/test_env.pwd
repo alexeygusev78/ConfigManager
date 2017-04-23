@@ -1,2 +1,2 @@
-manager.password = 76767
-client.password = 0001
+manager.login = sys_man
+manager.password = 7654abc

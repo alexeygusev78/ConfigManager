@@ -49,7 +49,6 @@ public class ConfigManager implements OptionsInitializer {
     public void initOptions(Options opts) {
 
         // -halt
-        //        opt.addOption("halt", "Halt & cancel work on found unmatched parameters.");
         opts.addOption(Opts.HALT, false, "Halt & cancel work on found unmatched parameters.");
 
         // -info
@@ -76,7 +75,11 @@ public class ConfigManager implements OptionsInitializer {
         OptionsHelper options = new OptionsHelper(args, this);
 
         if (options.isHelp()) {
-            options.showHelp("cfgman <cmd>", "Config Manager command-line tool", "Alexey Gusev 2017");
+            StringBuilder sb = new StringBuilder();
+            sb.append("Config Manager command-line tool.").append("\r\n");
+            sb.append("Use ${cfgman.password[.size][.alphabet]} for automatic generate password. Alphabet is '0aA'.").append("\r\n");
+            sb.append("Use ${cfgman.md5} for MD5 generation.");
+            options.showHelp("cfgman [<options>]", sb.toString(), "Alexey Gusev 2017");
             return;
         }
 
