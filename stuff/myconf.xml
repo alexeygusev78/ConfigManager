@@ -2,31 +2,31 @@
 <myapp>
 	<config>
 		<transporter>
-			<host>${transporter.host}</host>
-			<port>${transporter.port}</port>
-			<login>${transporter.login}</login>
-			<password>${transporter.password}</password>
-			<md5>${cfgman.md5}</md5>
+			<host>cedr34</host>
+			<port>5001</port>
+			<login>admv4</login>
+			<password>${cfgman.password}</password>
+			<md5>B22217C2310DBD23453089F37988B23A</md5>
 			
 			<!-- generate default password -->
-			<pwd1>${cfgman.password}</pwd1>
+			<pwd1>3etkEzNWYx</pwd1>
 			
 			<!-- generate password with length of 4 -->
-			<pwd1>${cfgman.password.4}</pwd1> 
+			<pwd1>q2gN</pwd1> 
 			
 			<!--  generate password len=4 and only digits -->
-			<pwd1>${cfgman.password.4.0}</pwd1>
+			<pwd1>4632</pwd1>
 			
 			<!-- generate password with digits & small letters -->
-			<pwd1>${cfgman.password.10.0a}</pwd1>
+			<pwd1>ew3dn1hi58</pwd1>
 			
 			<!-- generate password with digits, small letters & capital letters -->
-			<pwd1>${cfgman.password.10.0aA}</pwd1>
+			<pwd1>CXl8FxTU8f</pwd1>
 		</transporter>
 	</config>
 	<users>
-		<client login="${client.login}" password="${client.password}"/>
-		<manager login="${manager.login}" password="${manager.password}"/>
-		<admin login="${admin.login}" password="${admin.password}"/>
+		<client login="user11" password="0000"/>
+		<manager login="sys_man" password="7654abc"/>
+		<admin login="sys_admin" password="0123"/>
 	</users>
 </myapp>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<myapp>
+	<config>
+		<transporter>
+			<host>${transporter.host}</host>
+			<port>${transporter.port}</port>
+			<login>${transporter.login}</login>
+			<password>${transporter.password}</password>
+			<md5>${cfgman.md5}</md5>
+			
+			<!-- generate default password -->
+			<pwd1>${cfgman.password}</pwd1>
+			
+			<!-- generate password with length of 4 -->
+			<pwd1>${cfgman.password.4}</pwd1> 
+			
+			<!--  generate password len=4 and only digits -->
+			<pwd1>${cfgman.password.4.0}</pwd1>
+			
+			<!-- generate password with digits & small letters -->
+			<pwd1>${cfgman.password.10.0a}</pwd1>
+			
+			<!-- generate password with digits, small letters & capital letters -->
+			<pwd1>${cfgman.password.10.0aA}</pwd1>
+		</transporter>
+	</config>
+	<users>
+		<client login="${client.login}" password="${client.password}"/>
+		<manager login="${manager.login}" password="${manager.password}"/>
+		<admin login="${admin.login}" password="${admin.password}"/>
+	</users>
+</myapp>

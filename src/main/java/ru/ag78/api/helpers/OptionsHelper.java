@@ -20,6 +20,8 @@ public class OptionsHelper {
     private CommandLine cmd;
     private Options options;
 
+    public final static String HELP_OPTION = "h";
+
     /**
      * Ctor with command-line arguments and OptionsInitializer ref for callback.
      * @param args
@@ -31,7 +33,7 @@ public class OptionsHelper {
         }
 
         options = new Options();
-        options.addOption("?", "Show help information");
+        options.addOption(HELP_OPTION, "help", false, "Show help information");
         oi.initOptions(options);
 
         cmd = parseCommandLine(options, args);
@@ -117,6 +119,6 @@ public class OptionsHelper {
      */
     public boolean isHelp() {
 
-        return cmd.hasOption("?");
+        return cmd.hasOption(HELP_OPTION);
     }
 }

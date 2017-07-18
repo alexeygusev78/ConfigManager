@@ -3,8 +3,9 @@ package ru.ag78.utils.cfgman;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Map;
 
 import org.apache.commons.cli.Options;
 import org.apache.log4j.Logger;
@@ -29,6 +30,7 @@ public class ConfigManager implements OptionsInitializer {
         private static final String DEST = "dest";
         private static final String SRC = "src";
         private static final String INFO = "info";
+        private static final String PROPS = "props";
         private static final String HALT = "halt";
     }
 
@@ -53,6 +55,9 @@ public class ConfigManager implements OptionsInitializer {
 
         // -info
         opts.addOption(Opts.INFO, false, "Shows information about dat-file. Option -dat is mandatory.");
+
+        // -props
+        opts.addOption(Opts.PROPS, true, "Comma-separated key=value pairs: key1=value1,key2=value2. This values is high priority.");
 
         // -src, --source <filename>
         opts.addOption(Opts.SRC, "source", true, "Name of source file to be parametrized.");
@@ -98,16 +103,33 @@ public class ConfigManager implements OptionsInitializer {
         processSingle(options);
     }
 
+    /**
+     * Shows information for supplied files.
+     * @param opts
+     * @throws Exception
+     */
     private void showInfo(OptionsHelper opts) throws Exception {
 
-        Stream<String> s = this.getDatFiles(opts.getOption(Opts.DAT, "")).stream();
-        s.forEach(x -> {
-            try {
-                FileProcessor fp = new FileProcessor();
-                fp.showDatFileInfo(x);
-            } catch (Exception e) {
-            }
-        });
+        List<String> datFiles = getDatFiles(opts.getOption(Opts.DAT));
+        Map<String, String> extProps = getProps(opts.getOption(Opts.PROPS));
+
+        FileProcessor proc = new FileProcessor();
+        proc.init(datFiles, opts.isOption(Opts.HALT));
+        proc.addExtProps(extProps);
+        proc.initIgnoreList(opts.getOption(Opts.IGNORE));
+
+        proc.showDatFileInfo("Final:");
+
+        //        Map<String, String> extProps = getProps(opts.getOption(Opts.PROPS));
+        //        Stream<String> s = this.getDatFiles(opts.getOption(Opts.DAT, "")).stream();
+        //        s.forEach(x -> {
+        //            try {
+        //                FileProcessor fp = new FileProcessor();
+        //                fp.showDatFileInfo(x);
+        //            } catch (Exception e) {
+        //                log.error(e);
+        //            }
+        //        });
     }
 
     private void processBatch(String batchFile) throws Exception {
@@ -131,13 +153,14 @@ public class ConfigManager implements OptionsInitializer {
 
         String src = opts.getOption(Opts.SRC);
         String dest = opts.getOption(Opts.DEST);
-        // String dat = opts.getOption(Opts.DAT);
         List<String> datFiles = getDatFiles(opts.getOption(Opts.DAT));
+        Map<String, String> extProps = getProps(opts.getOption(Opts.PROPS));
 
         log.info("src=" + src + " dest=" + dest + " dat=" + datFiles.toString());
 
         FileProcessor proc = new FileProcessor();
         proc.init(datFiles, opts.isOption(Opts.HALT));
+        proc.addExtProps(extProps);
         proc.initIgnoreList(opts.getOption(Opts.IGNORE));
         proc.processFile(src, dest);
 
@@ -149,6 +172,26 @@ public class ConfigManager implements OptionsInitializer {
         sb.append(" " + (proc.getCntrFail().get() > 0 ? "XXXXX" : ""));
         log.info(sb.toString());
         log.info("");
+    }
+
+    /**
+     * Формируем map добавленных свойств на основе параметров -props key1=value1,key2=value2.
+     * @param option
+     * @return
+     */
+    private Map<String, String> getProps(String option) {
+
+        Map<String, String> extProps = new HashMap<>();
+
+        String[] pairs = option.split(",");
+        for (String pair: pairs) {
+            String[] tokens = pair.split("=");
+            String key = String.format("${%s}", tokens[0]);
+            String value = tokens[1];
+            extProps.put(key, value);
+        }
+
+        return extProps;
     }
 
     private List<String> getDatFiles(String option) {

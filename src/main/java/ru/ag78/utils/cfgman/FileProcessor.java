@@ -180,25 +180,33 @@ public class FileProcessor {
         }
 
         if (cntrOk.get() > 0 || srcFile.compareTo(destFile) != 0) {
-            // write output file only if c > 0 or destFile differ srcFile 
-            FileWriter fw = new FileWriter(destFile);
-            fw.write(sb.toString());
-            fw.flush();
-            fw.close();
+            writeTo(destFile, sb);
         } else {
             log.info("Write dest skiped.");
         }
     }
 
+    private void writeTo(String destFile, StringBuffer sb) throws Exception {
+
+        if (destFile.equalsIgnoreCase("CON")) {
+            System.out.print(sb.toString());
+            return;
+        }
+
+        try (FileWriter fw = new FileWriter(destFile)) {
+            fw.write(sb.toString());
+        }
+    }
+
     public void showDatFileInfo(String dat) throws Exception {
 
-        init(dat, false);
+        // init(dat, false);
 
         log.info("--- Info mode: dat=" + dat);
         log.info("options.count=" + replacements.size());
 
         for (String key: replacements.keySet()) {
-            log.debug("  " + key);
+            log.info(String.format("  %s=%s", key, replacements.get(key)));
         }
         log.info("");
     }
@@ -267,5 +275,14 @@ public class FileProcessor {
     public Counter getCntrFail() {
 
         return cntrFail;
+    }
+
+    /**
+     * Replace extisting properties with supplied new one.
+     * @param extProps
+     */
+    public void addExtProps(Map<String, String> extProps) {
+
+        replacements.putAll(extProps);
     }
 }
