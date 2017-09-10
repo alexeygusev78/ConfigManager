@@ -2,10 +2,12 @@ package ru.ag78.utils.cfgman;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 import org.apache.commons.cli.Options;
 import org.apache.log4j.Logger;
@@ -80,11 +82,7 @@ public class ConfigManager implements OptionsInitializer {
         OptionsHelper options = new OptionsHelper(args, this);
 
         if (options.isHelp()) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("Config Manager command-line tool.").append("\r\n");
-            sb.append("Use ${cfgman.password[.size][.alphabet]} for automatic generate password. Alphabet is '0aA'.").append("\r\n");
-            sb.append("Use ${cfgman.md5} for MD5 generation.");
-            options.showHelp("cfgman [<options>]", sb.toString(), "Alexey Gusev 2017");
+            showHelp(options);
             return;
         }
 
@@ -101,6 +99,26 @@ public class ConfigManager implements OptionsInitializer {
         }
 
         processSingle(options);
+    }
+
+    /**
+     * Outputs help information.
+     * @param options
+     */
+    private void showHelp(OptionsHelper options) {
+
+        Properties props = new Properties();
+        try (InputStream is = this.getClass().getResourceAsStream("/META-INF/MANIFEST.MF")) {
+            props.load(is);
+        } catch (Exception e) {
+            log.error(e.toString(), e);
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("Config Manager command-line tool ").append("v").append(props.getProperty("Version")).append("\r\n");
+        sb.append("Use ${cfgman.password[.size][.alphabet]} for automatic generate password. Alphabet is '0aA'.").append("\r\n");
+        sb.append("Use ${cfgman.md5} for MD5 generation.");
+        options.showHelp("cfgman [<options>]", sb.toString(), "Alexey Gusev 2017");
     }
 
     /**
@@ -149,6 +167,11 @@ public class ConfigManager implements OptionsInitializer {
         }
     }
 
+    /**
+     * Process single file.
+     * @param opts
+     * @throws Exception
+     */
     private void processSingle(OptionsHelper opts) throws Exception {
 
         String src = opts.getOption(Opts.SRC);
