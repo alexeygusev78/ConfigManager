@@ -29,11 +29,13 @@ public class ConfigManager implements OptionsInitializer {
         private static final String IGNORE = "i";
         private static final String BATCH = "batch";
         private static final String DAT = "dat";
+        private static final String ORIG = "orig";
         private static final String DEST = "dest";
         private static final String SRC = "src";
         private static final String INFO = "info";
         private static final String PROPS = "props";
         private static final String HALT = "halt";
+        private static final String CHECK = "chk";
     }
 
     public static void main(String[] args) {
@@ -75,6 +77,8 @@ public class ConfigManager implements OptionsInitializer {
 
         // -i, --ignore <param1,param2,...,paramN>
         opts.addOption(Opts.IGNORE, "ignore", true, "List of ignorable parameters, separated by comma.");
+        opts.addOption(Opts.ORIG, "original-file", true, "Supply original dat-file to check another. If files are different -1 will be returned.");
+        opts.addOption(Opts.CHECK, "check-dat-file", false, "Checks -dat file vs original-file.");
     }
 
     private void start(String[] args) throws Exception {
@@ -98,7 +102,22 @@ public class ConfigManager implements OptionsInitializer {
             return;
         }
 
+        if (options.isOption(Opts.CHECK)) {
+            checkDatFile(options);
+            return;
+        }
+
         processSingle(options);
+    }
+
+    /**
+     * Checks dat file on original
+     * @param options
+     * @throws Exception
+     */
+    private void checkDatFile(OptionsHelper options) throws Exception {
+
+        new FileChecker(options.getOption(Opts.DAT), options.getOption(Opts.ORIG)).check();
     }
 
     /**

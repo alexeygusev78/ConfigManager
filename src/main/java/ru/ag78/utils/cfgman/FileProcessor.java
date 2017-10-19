@@ -91,8 +91,9 @@ public class FileProcessor {
         try (FileReader fr = new FileReader(datFile); BufferedReader br = new BufferedReader(fr)) {
             String line = "";
             while ((line = br.readLine()) != null) {
+                line = SafeTypes.getDBString(line);
                 // commented lines starts with # character
-                if (line.startsWith("#")) {
+                if (line.startsWith("#") || line.isEmpty()) {
                     continue;
                 }
 

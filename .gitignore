@@ -7,3 +7,4 @@ build/
 .settings/
 cfgman.log
 stuff/myconf_out.xml
+cfgman.log.*

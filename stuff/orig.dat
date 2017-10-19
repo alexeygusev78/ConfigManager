@@ -12,5 +12,4 @@ admin.password = 0123
 manager.login = manager1
 manager.password = log
 
-sockets.server.password=log
-afxng.host.https=25
+sockets.server.login=sslogin
