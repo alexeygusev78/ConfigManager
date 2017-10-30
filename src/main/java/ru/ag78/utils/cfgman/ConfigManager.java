@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import ru.ag78.api.helpers.OptionsHelper;
 import ru.ag78.api.helpers.OptionsInitializer;
+import ru.ag78.api.utils.SafeArrays;
 
 /**
  * Start class of ConfigManager
@@ -195,6 +196,10 @@ public class ConfigManager implements OptionsInitializer {
 
         String src = opts.getOption(Opts.SRC);
         String dest = opts.getOption(Opts.DEST);
+        if (dest.isEmpty()) {
+            dest = src;
+        }
+
         List<String> datFiles = getDatFiles(opts.getOption(Opts.DAT));
         Map<String, String> extProps = getProps(opts.getOption(Opts.PROPS));
 
@@ -226,10 +231,20 @@ public class ConfigManager implements OptionsInitializer {
         Map<String, String> extProps = new HashMap<>();
 
         String[] pairs = option.split(",");
+        if (pairs.length == 0) {
+            return extProps;
+        }
+
         for (String pair: pairs) {
             String[] tokens = pair.split("=");
-            String key = String.format("${%s}", tokens[0]);
-            String value = tokens[1];
+            String key = SafeArrays.getSafeItem(tokens, 0);
+            if (key.isEmpty()) {
+                continue;
+            }
+
+            key = String.format("${%s}", key);
+            String value = SafeArrays.getSafeItem(tokens, 1);
+
             extProps.put(key, value);
         }
 

@@ -39,8 +39,8 @@ public class FileChecker {
         Map<String, String> orig = loadDatFile(origFile);
         Map<String, String> dat = loadDatFile(datFile);
 
-        log.info(String.format("There are %d parameters in original-file", orig.keySet().size()));
-        log.info(String.format("There are %d parameters in your dat-file", dat.keySet().size()));
+        log.info(String.format("There are %d parameters in original-file (%s)", orig.keySet().size(), origFile));
+        log.info(String.format("There are %d parameters in your dat-file (%s)", dat.keySet().size(), datFile));
         log.info("");
 
         // найти неизвестные параметры в dat-файле
